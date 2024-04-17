@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-import os
 
 # Function to detect faces in the uploaded image
 def detect_faces(image):
@@ -16,10 +15,6 @@ def detect_faces(image):
 def display_greeting():
     st.write("Welcome Ya habibi!")
 
-# Function to play music
-def play_music(audio_file):
-    st.audio(audio_file, format='audio/mp3')
-
 def main():
     st.title("Face Detection and Greeting Web App")
     st.write("Upload a photo to see if I can detect your face!")
@@ -34,12 +29,6 @@ def main():
         # Check if image contains a face
         if detect_faces(uploaded_image.name):
             display_greeting()
-
-        # Upload music
-        uploaded_audio = st.file_uploader("Upload Music (MP3)", type=['mp3'])
-
-        if uploaded_audio is not None:
-            play_music(uploaded_audio)
 
 if __name__ == '__main__':
     main()

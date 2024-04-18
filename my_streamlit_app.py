@@ -1,42 +1,18 @@
 import streamlit as st
-import cv2
 import os
 from playsound import playsound
 
-def detect_and_capture_face():
-    # Load pre-trained face detection model
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
-    # Initialize webcam
-    cap = cv2.VideoCapture(0)
-
-    while(True):
-        # Capture frame-by-frame
-        ret, frame = cap.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+def detect_and_capture_face(uploaded_file):
+    if uploaded_file is not None:
+        # Save the uploaded photo
+        with open("customer_image.jpg", "wb") as f:
+            f.write(uploaded_file.getbuffer())
         
-        # Detect faces in the frame
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        # Play crowd noise effect
+        play_crowd_noise()
         
-        # Draw rectangles around detected faces
-        for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        
-        # Display the frame
-        st.image(frame, channels="BGR")
-        
-        # Capture an image if a face is detected
-        if len(faces) > 0:
-            cv2.imwrite('customer_image.jpg', frame)  # Save the captured image
-            break
-        
-        # Break the loop when 'q' is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    # Release the webcam and close OpenCV windows
-    cap.release()
-    cv2.destroyAllWindows()
+        # Display success message
+        st.success("Welcome! Your face has been captured.")
 
 def play_crowd_noise():
     # Play crowd noise effect
@@ -46,11 +22,12 @@ def play_crowd_noise():
 def main():
     st.title("Welcome System for Customers")
 
+    # File uploader to upload a photo
+    uploaded_file = st.file_uploader("Upload a photo", type=["jpg", "jpeg", "png"])
+
     # Button to trigger face detection and capture
     if st.button("Detect and Capture Face"):
-        detect_and_capture_face()
-        play_crowd_noise()
-        st.success("Welcome! Your face has been captured.")
+        detect_and_capture_face(uploaded_file)
 
 if __name__ == '__main__':
     main()

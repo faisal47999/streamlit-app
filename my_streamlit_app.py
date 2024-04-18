@@ -1,34 +1,56 @@
 import streamlit as st
-from PIL import Image
+import cv2
+import os
+from playsound import playsound
 
-# Function to detect faces in the uploaded image
-def detect_faces(image):
-    # Dummy face detection function
-    # Replace this with your actual face detection model
-    # Here, I'm just checking if the image contains any face or not
-    # You might need to use a more sophisticated face detection model
-    # such as OpenCV's Haar Cascade Classifier or a deep learning-based model
-    # to accurately detect faces
-    return True if 'face' in image.lower() else False
+def detect_and_capture_face():
+    # Load pre-trained face detection model
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-# Function to display greeting message
-def display_greeting():
-    st.write("Welcome Ya habibi!")
+    # Initialize webcam
+    cap = cv2.VideoCapture(0)
+
+    while(True):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        
+        # Detect faces in the frame
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        
+        # Draw rectangles around detected faces
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        
+        # Display the frame
+        st.image(frame, channels="BGR")
+        
+        # Capture an image if a face is detected
+        if len(faces) > 0:
+            cv2.imwrite('customer_image.jpg', frame)  # Save the captured image
+            break
+        
+        # Break the loop when 'q' is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # Release the webcam and close OpenCV windows
+    cap.release()
+    cv2.destroyAllWindows()
+
+def play_crowd_noise():
+    # Play crowd noise effect
+    crowd_noise_file = 'crowd_noise.mp3'  # Place your crowd noise audio file in the same directory
+    playsound(crowd_noise_file)
 
 def main():
-    st.title("Face Detection and Greeting Web App")
-    st.write("Upload a photo to see if I can detect your face!")
+    st.title("Welcome System for Customers")
 
-    # Upload image
-    uploaded_image = st.file_uploader("Upload Image", type=['jpg', 'jpeg', 'png'])
-
-    if uploaded_image is not None:
-        # Display uploaded image
-        st.image(uploaded_image, caption='Uploaded Image', use_column_width=True)
-        
-        # Check if image contains a face
-        if detect_faces(uploaded_image.name):
-            display_greeting()
+    # Button to trigger face detection and capture
+    if st.button("Detect and Capture Face"):
+        detect_and_capture_face()
+        play_crowd_noise()
+        st.success("Welcome! Your face has been captured.")
 
 if __name__ == '__main__':
     main()

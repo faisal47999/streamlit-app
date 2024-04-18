@@ -25,7 +25,7 @@ def apply_effects(image, faces):
 
     # Apply photo frame around detected faces
     for (x, y, w, h) in faces:
-        resized_frame = cv2.resize(frame_img, (w, h))
+        resized_frame = cv2.resize(frame_img, (w, h))  # Resize the frame to match face size
         image[y:y+h, x:x+w] = np.where(resized_frame[...,3]==255, resized_frame[:,:,:3], image[y:y+h, x:x+w])
 
     return image
@@ -45,17 +45,23 @@ def main():
         image = Image.open(uploaded_file)
         img_array = np.array(image)
 
-        # Detect faces in the image
-        faces = detect_faces(img_array)
+        if img_array.size > 0:  # Check if the image is not empty
+            # Detect faces in the image
+            faces = detect_faces(img_array)
 
-        # Apply photo frame around detected faces
-        image_with_effects = apply_effects(img_array, faces)
+            if len(faces) > 0:  # Check if faces are detected
+                # Apply photo frame around detected faces
+                image_with_effects = apply_effects(img_array, faces)
 
-        # Display image with effects
-        st.image(image_with_effects, caption='Welcome!', use_column_width=True)
+                # Display image with effects
+                st.image(image_with_effects, caption='Welcome!', use_column_width=True)
 
-        # Play welcoming sound
-        play_welcome_sound()
+                # Play welcoming sound
+                play_welcome_sound()
+            else:
+                st.error("No faces detected in the uploaded photo.")
+        else:
+            st.error("Uploaded photo is empty or invalid.")
 
 if __name__ == '__main__':
     main()

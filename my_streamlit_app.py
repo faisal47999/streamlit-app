@@ -15,7 +15,8 @@ def main():
             <style>
                 .reportview-container {{
                     background: url(data:image/jpeg;base64,{uploaded_file.getvalue().hex()});
-                    background-size: cover;
+                    background-size: contain;
+                    background-repeat: no-repeat;
                 }}
             </style>
             """,

@@ -2,9 +2,9 @@ import streamlit as st
 
 def main():
     # Background image path
-    background_path = "D:/background"  # Update this with your image path without extension
+    background_path = "D:/background.jpg"
 
-    # Set background image using HTML
+    # Set background image using CSS
     st.markdown(
         f"""
         <style>

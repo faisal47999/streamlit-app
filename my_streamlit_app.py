@@ -2,7 +2,7 @@ import streamlit as st
 
 def main():
     # Background image path
-    background_path = "D:/background.jpg!bw700"  # Update this with your image path
+    background_path = "D:/background"  # Update this with your image path without extension
 
     # Set background image using HTML
     st.markdown(

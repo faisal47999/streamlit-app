@@ -9,14 +9,14 @@ def main():
     if uploaded_file is not None:
         # Display the uploaded image
         st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
-        # Set background image using CSS
+        # Set background image using CSS with automatic adjustment
         st.markdown(
             f"""
             <style>
                 .reportview-container {{
                     background: url(data:image/jpeg;base64,{uploaded_file.getvalue().hex()});
-                    background-size: contain;
-                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center;
                 }}
             </style>
             """,

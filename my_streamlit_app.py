@@ -6,13 +6,15 @@ def main():
     # Upload image file
     uploaded_file = st.file_uploader("Upload Background Image", type=["jpg", "jpeg", "png"])
 
+    # Background image path
+    background_path = "background.jpg"
+
     if uploaded_file is not None:
         # Save the uploaded file locally
         with open("background.jpg", "wb") as f:
             f.write(uploaded_file.getvalue())
-
-    # Background image path
-    background_path = "background.jpg"
+        # Update background image path
+        background_path = "background.jpg"
 
     # Set background image using CSS
     st.markdown(
